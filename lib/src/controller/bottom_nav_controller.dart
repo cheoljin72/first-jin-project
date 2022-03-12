@@ -1,4 +1,7 @@
-  import 'package:get/get.dart';
+  import 'dart:js';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:prac_instargram/src/pages/upload.dart';
 
 enum PageName {HOME,SEARCH,UPLOAD,ACTIVITY,MYPAGE}
@@ -25,21 +28,21 @@ class BottomNavController extends GetxController {
     void _changePage(int value,{bool hasGesture = true}){
       pageIndex(value);
       if(!hasGesture) return;
+      if(bottomHistory.contains(value)){
+        bottomHistory.remove(value);
+      }
       bottomHistory.add(value);
-      print(bottomHistory);
-
     }
   
   Future<bool> willPopAction() async {
     if(bottomHistory.length==1){
-      print('exit!');
+      showDialog(context: Get.context!, builder: (context) => MessagePopup());
       return true;
     }else{
       bottomHistory.removeLast();
       var index = bottomHistory.last;
-      changeBottomNav(index);
+      changeBottomNav(index, hasGesture: false);
       return false;
     }
-
   }
 }
